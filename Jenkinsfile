@@ -12,30 +12,17 @@ pipeline{
           }
       }
       
-     stage("Build & SonarQube analysis") {
-            agent any
-            steps {
-              withSonarQubeEnv('SonarPassport') {
-                sh 'java -version'
-                sh 'mvn clean package sonar:sonar'
-              }
-            }
-          }
-     stage("Quality gate") {
-            steps {
-                waitForQualityGate abortPipeline: true
-            }
-        }
+    
     
      stage('Deploy to artifactory'){
         steps{
         rtUpload(
-         serverId : 'ARTIFACTORY_SERVER',
+         serverId : 'robin-server',
          spec :'''{
            "files" :[
            {
            "pattern":"target/*.jar",
-           "target":"art-doc-devo-loc"
+           "target":"maventk"
            }
            ]
          }''',
